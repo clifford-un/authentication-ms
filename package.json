@@ -1,0 +1,26 @@
+{
+  "name": "authentication-ms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clifford-un/authentication-ms.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clifford-un/authentication-ms/issues"
+  },
+  "homepage": "https://github.com/clifford-un/authentication-ms#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.16.4",
+    "ioredis": "^4.9.3"
+  }
+}
