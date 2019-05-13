@@ -6,22 +6,22 @@ const client = new redis(process.env.REDIS_URL);
 // Connection and Events:
 
 client.on("connect", function() {
-  console.log("Redis client connected");
+	console.log("Redis client connected");
 });
 
 client.on("reconnecting", function() {
-  console.log("Redis client is trying to reconnect");
+	console.log("Redis client is trying to reconnect");
 });
 
 client.on("error", function(err) {
-    if (err) {
-        console.log("Something went wrong (Redis): " + err);
-        // throw error;
-      }
+	if (err) {
+		console.log("Something went wrong (Redis): " + err);
+		// throw error;
+	}
 });
 
 client.on("end", function(err) {
-  console.log("Redis client closed");
+	console.log("Redis client closed");
 });
 
 // ------------------
