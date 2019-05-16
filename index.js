@@ -29,5 +29,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.use(function(req, res, next) {
-	res.status(404).send("Sorry cant find that!");
+	res.status(404).send("404. Sorry cant find that!");
 });
