@@ -1,4 +1,4 @@
-version: "2.1"
+version: "3"
 services:
   app-ms:
     build: ./
@@ -7,11 +7,28 @@ services:
       - 3000:3000
     depends_on:
       - redis-db
+      # - users-db
     environment:
       - REDIS_URL=redis://auth-db
+      # - DATABASE_URL= postgres://postgres@postgres/postgres
 
   redis-db:
     image: redis:5-alpine
     container_name: auth-db
     ports:
       - 6379:6379
+
+  # users-db:
+  #   image: postgres:11-alpine
+  #   container_name: users-db
+  #   volumes:
+  #     # - ./tmp/db:/var/lib/postgresql/data
+  #     - ./pgdata:/var/lib/postgresql/data
+  #   ports:
+  #     - 5432:5432
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_DB=postgres
+  #   # user: root
+  #   # command: pg_ctl -D /var/lib/postgresql/data -l logfile start
