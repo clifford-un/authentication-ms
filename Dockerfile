@@ -1,5 +1,9 @@
 FROM node:9-alpine
 
+# Descomentar para usar docker-compose build y up con proxy:
+# ENV http_proxy http://168.176.239.41:8080
+# ENV https_proxy http://168.176.239.41:8080
+
 # Create app directory
 WORKDIR /usr/src/app-ms
 
