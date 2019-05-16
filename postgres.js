@@ -21,7 +21,7 @@ function printAllUsers() {
 		} else {
 			console.log(res.rows);
 		}
-		pool.end();
+		// pool.end();
 	});
 }
 
@@ -38,6 +38,30 @@ function updatePassword(userName, password) {
 		} else {
 			console.log("Postgres: Contraseña cambiada");
 		}
+		// pool.end();
+	});
+}
+
+function login(userId, password) {
+	let query = {
+		text: `SELECT * FROM users
+		WHERE user_id = $1 AND password = $2`,
+		values: [userId, password]
+	};
+	pool.query(query, (err, res) => {
+		if (err) {
+			console.log(err);
+		} else {
+			var user = res.rows[0]
+			// console.log('user :', user);
+			// console.log('typeof user :', typeof user);
+			if (user !== undefined) {
+				console.log("Existe un usuario");
+			}
+			else {
+				console.log("userId y password incorrectos");
+			}
+		}
 		pool.end();
 	});
 }
@@ -45,4 +69,6 @@ function updatePassword(userName, password) {
 // // --build-arg HTTP_PROXY=http://168.176.239.41:8080 --build-arg HTTPS_PROXY=http://168.176.239.41:8080
 
 // updatePassword("user4","secret4")
-printAllUsers()
+// printAllUsers()
+console.log("------");
+login(3, "secret3")
