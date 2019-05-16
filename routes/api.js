@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const redis = require("ioredis");
-// const client = redis.createClient(6379, 'redis-db');
 const client = new redis(process.env.REDIS_URL);
+
+const { isAuth } = require("../middlewares/auth");
 
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
@@ -45,6 +46,10 @@ router.delete("/get/:key", function(req, res, next) {
 	let { key } = req.params;
 	client.del(key);
 	res.status(200).send("email borrado");
+});
+
+router.get("/private", isAuth, function(req, res, next) {
+	res.status(200).send({ message: "Tienes acceso" });
 });
 
 module.exports = router;
