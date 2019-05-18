@@ -3,24 +3,17 @@ const moment = require("moment");
 const config = require("../config");
 const ms = require("ms");
 
-// To make the JWT more efficient we need 3 things
-var i = "Mysoft corp"; // Issuer (Software organization who issues the token)
-var s = "some@user.com"; // Subject (intended user of the token)
-var a = "http://mysoftcorp.in"; // Audience (Domain within which this token will live and function)
-
 function decodeToken(token) {
 	var verifyOptions = {
-		issuer: i,
+		issuer: config.Issuer,
 		// subject: user,
-		audience: a,
-		expiresIn: "20s",
-		algorithm: ["HS256"]
+		audience: config.Audience,
+		expiresIn: config.Expiration_Time,
+		algorithm: config.Algorithm
 	};
 
 	var legit = jwt.verify(token, config.SECRET_TOKEN, verifyOptions);
 	return legit
-	// console.log("legit :", legit);
-	// console.log("\nJWT verification result: " + JSON.stringify(legit));
 }
 
 var isAuth = function(req, res, next) {

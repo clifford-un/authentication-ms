@@ -1,6 +1,4 @@
 const redis = require("ioredis");
-
-// const client = redis.createClient(6379, 'redis-db');
 const client = new redis(process.env.REDIS_URL);
 
 // Connection and Events:
@@ -36,4 +34,3 @@ client.on("end", function(err) {
 // });
 
 module.exports = redis;
-// module.exports = client;
