@@ -55,19 +55,15 @@ function login(req, res, next) {
 		} else {
 			var user = resp.rows[0];
 			if (user !== undefined) {
-				console.log("Existe un usuario");
 				let token = createToken(userId);
 				res.status(201).send({ jwt: token });
 			} else {
-				console.log("userId y password incorrectos");
 				res.status(401).send({ error: "userId y password incorrectos" });
 			}
 		}
 		// pool.end();
 	});
 }
-
-// // --build-arg HTTP_PROXY=http://168.176.239.41:8080 --build-arg HTTPS_PROXY=http://168.176.239.41:8080
 
 module.exports = {
 	getAllUsers,
