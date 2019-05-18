@@ -12,8 +12,8 @@
     "url": "git+https://github.com/clifford-un/authentication-ms.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Clifford-UN",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/clifford-un/authentication-ms/issues"
   },
