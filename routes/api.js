@@ -47,7 +47,7 @@ router.delete("/get/:key", function(req, res, next) {
 	res.status(200).send({ message: "email borrado" });
 });
 
-// router.post("/login", postgres.login);
+router.post("/login", postgres.login);
 
 router.get("/private", isAuth, function(req, res, next) {
 	res.status(200).send({ message: "Tienes acceso" });

@@ -1,6 +1,7 @@
-version: "3"
+version: "2.1"
 services:
   app-ms:
+    container_name: auth-ms
     build: ./
     restart: on-failure
     ports:

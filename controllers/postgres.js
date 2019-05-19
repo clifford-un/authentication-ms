@@ -3,13 +3,38 @@ const { createToken } = require("./auth");
 
 // pools will use environment variables
 // for connection information
+// const pool = new Pool({
+// 	user: "postgres",
+// 	host: process.env.DB_HOST || "testing-db",
+// 	database: "test_sebasp",
+// 	// password: "123456",
+// 	port: 5432
+// });
+
+// the pool with emit an error on behalf of any idle clients
+// it contains if a backend error or network partition happens
+// pool.on("error", (err, client) => {
+// 	console.error("Unexpected error on idle client", err);
+// 	// process.exit(-1);
+// });
+
+// // // callback - checkout a client
+
+const connectionString =
+	"postgresql://postgres@192.168.99.101:5432/test_sebasp";
+
 const pool = new Pool({
-	user: "postgres",
-	host: "localhost",
-	database: "users-db",
-	password: "123456",
-	port: 5432
+	connectionString: connectionString
 });
+
+pool.connect((err, client, done) => {
+	if (err) {
+		console.log(`Something wrong: ${err}`);
+	}
+	console.log("Postgres database connected");
+});
+
+// pg.connect('postgres://postgres:password@localhost:5432/practicedocker');
 
 function getAllUsers() {
 	let query = {
@@ -64,6 +89,8 @@ function login(req, res, next) {
 		// pool.end();
 	});
 }
+
+getAllUsers();
 
 module.exports = {
 	getAllUsers,
