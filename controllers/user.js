@@ -11,15 +11,6 @@ const { createToken } = require("./auth");
 // 	port: 5432
 // });
 
-// the pool with emit an error on behalf of any idle clients
-// it contains if a backend error or network partition happens
-// pool.on("error", (err, client) => {
-// 	console.error("Unexpected error on idle client", err);
-// 	// process.exit(-1);
-// });
-
-// // // callback - checkout a client
-
 const connectionString =
 	"postgresql://postgres@192.168.99.101:5432/test_sebasp";
 
@@ -29,12 +20,11 @@ const pool = new Pool({
 
 pool.connect((err, client, done) => {
 	if (err) {
-		console.log(`Something wrong: ${err}`);
+		console.log(`Something went wrong with Postgres: ${err}`);
+	} else {
+		console.log("Postgres database connected");
 	}
-	console.log("Postgres database connected");
 });
-
-// pg.connect('postgres://postgres:password@localhost:5432/practicedocker');
 
 function getAllUsers() {
 	let query = {
@@ -50,21 +40,21 @@ function getAllUsers() {
 	});
 }
 
-function updatePassword(userName, password) {
-	let query = {
-		text: `UPDATE users
-		SET password = $2
-		WHERE user_name = $1`,
-		values: [userName, password]
-	};
-	pool.query(query, (err, res) => {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log("Postgres: Contraseña cemailambiada");
-		}
-	});
-}
+// function updatePassword(userName, password) {
+// 	let query = {
+// 		text: `UPDATE users
+// 		SET password = $2
+// 		WHERE user_name = $1`,
+// 		values: [userName, password]
+// 	};
+// 	pool.query(query, (err, res) => {
+// 		if (err) {
+// 			console.log(err);
+// 		} else {
+// 			console.log("Postgres: Contraseña cambiada");
+// 		}
+// 	});
+// }
 
 function login(req, res, next) {
 	let userId = req.body.userId;
@@ -94,6 +84,5 @@ getAllUsers();
 
 module.exports = {
 	getAllUsers,
-	updatePassword,
 	login
 };

@@ -18,7 +18,7 @@ function decodeToken(token) {
 
 var isAuth = function(req, res, next) {
 	if (!req.headers.authorization) {
-		return res.status(403).send({ message: "No tienes autorizacion" });
+		return res.status(403).send({ error: "No tienes autorizacion" });
 	}
 
 	const token = req.headers.authorization.split(" ")[1];
@@ -29,7 +29,7 @@ var isAuth = function(req, res, next) {
 	// }
 
 	if (payload.exp < moment().unix()) {
-		return res.status(401).send({ message: "El token ha expirado" });
+		return res.status(401).send({ error: "El token ha expirado" });
 	}
 
 	req.user = payload.sub;

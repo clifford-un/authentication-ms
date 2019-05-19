@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const config = require("./config")
 const router = require("./routes/api");
-const redisConnect = require("./redisConnect");
+const {client} = require("./redisConnect");
 
 const port = config.PORT;
 const app = express();

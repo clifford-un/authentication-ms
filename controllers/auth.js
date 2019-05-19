@@ -9,7 +9,6 @@ function createToken(userId) {
 	const payload = {
 		// sub: user,
 		data1: "Data 1"
-		// data2: "Data 2"
 		// iat: moment().unix(),
 		// exp: moment()
 		// 	.add(14, "days")
@@ -25,20 +24,8 @@ function createToken(userId) {
 	};
 
 	var token = jwt.sign(payload, config.SECRET_TOKEN, signOptions);
+	// Guardar token en Redis?
 	return token;
-}
-
-function decodeToken(token) {
-	var verifyOptions = {
-		issuer: i,
-		// subject: user,
-		audience: a,
-		expiresIn: "12h",
-		algorithm: ["HS256"]
-	};
-
-	var legit = jwt.verify(token, config.SECRET_TOKEN, verifyOptions);
-	console.log("\nJWT verification result: " + JSON.stringify(legit));
 }
 
 module.exports = {
