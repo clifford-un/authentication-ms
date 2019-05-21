@@ -57,12 +57,12 @@ function getAllUsers() {
 // }
 
 function login(req, res, next) {
-	let userId = req.body.userId;
+	let userName = req.body.userName;
 	let password = req.body.password;
 	let query = {
 		text: `SELECT * FROM users
 		WHERE user_id = $1 AND password = $2`,
-		values: [userId, password]
+		values: [userName, password]
 	};
 	pool.query(query, (err, resp) => {
 		if (err) {
@@ -70,17 +70,16 @@ function login(req, res, next) {
 		} else {
 			var user = resp.rows[0];
 			if (user !== undefined) {
-				let token = createToken(userId);
+				let token = createToken(userName);
+				console.log("Token creado");
 				res.status(201).send({ jwt: token });
 			} else {
-				res.status(401).send({ error: "userId y password incorrectos" });
+				res.status(401).send({ message: "userName y password incorrectos" });
 			}
 		}
 		// pool.end();
 	});
 }
-
-getAllUsers();
 
 module.exports = {
 	getAllUsers,

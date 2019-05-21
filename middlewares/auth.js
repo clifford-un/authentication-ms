@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 const config = require("../config");
-const ms = require("ms");
+const { client } = require("../redisConnect");
+// const { userHasToken } = require("../controllers/token");
 
-function decodeToken(token) {
+function decodeToken(token, res) {
 	var verifyOptions = {
 		issuer: config.Issuer,
 		// subject: user,
@@ -12,31 +13,36 @@ function decodeToken(token) {
 		algorithm: config.Algorithm
 	};
 
-	var legit = jwt.verify(token, config.SECRET_TOKEN, verifyOptions);
-	return legit
+	var legit = jwt.verify(token, config.SECRET_TOKEN, verifyOptions,function (err, decoded) {
+		if (err) {
+			res.status(401).send({ error: err.message });
+		}
+	});
+	return legit;
 }
 
-var isAuth = function(req, res, next) {
+function isAuth(req, res, next) {
 	if (!req.headers.authorization) {
 		return res.status(403).send({ error: "No tienes autorizacion" });
 	}
 
 	const token = req.headers.authorization.split(" ")[1];
-	const payload = decodeToken(token);
-
-	// if (!payload) {
-	// 	return res.status(403).send({ message: "Wrong token" });
-	// }
-
-	if (payload.exp < moment().unix()) {
-		return res.status(401).send({ error: "El token ha expirado" });
-	}
-
-	req.user = payload.sub;
-	// res.status(200).send({ message: "Tienes acceso" });
+	let { userName } = req.params;
+	client.get(userName, function(err, result) {
+		if (result && token == result) {
+			// console.log("TRUE");
+			var value = result;
+			return res.status(200).send({ message: "Tienes acceso" });
+		}
+		else {
+			// console.log("FALSE");
+			const payload = decodeToken(token, res);
+			// req.user = payload.sub
+		}
+	});
 	next();
 };
 
 module.exports = {
-	isAuth: isAuth
+	isAuth
 };
