@@ -1,0 +1,126 @@
+#Test with: http://editor.swagger.io/
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Microservice for Authentication
+  description: NodeJS + Redis
+  license:
+    name: Kiwi Platform
+host: 192.168.99.101:3200
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /:
+    get:
+      summary: Returns a test
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Test'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  /login:
+    post:
+      summary: Create a token if the username and password are corrects
+      parameters:
+        - name: userName
+          in: body
+          description: User's username in the app
+          required: true
+        - name: password
+          in: body
+          description: User's password
+          required: true
+          schema:
+            $ref: '#/definitions/LoginInput'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/Token'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  
+  /login/{id}:
+    get:
+      summary: Verify that the token is valid and belongs to the user
+      parameters:
+        - name: token
+          in: header
+          description: A valid jwt 
+          required: true
+        - name: id
+          in: path
+          description: User's id
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/TokenOK'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+            
+            
+definitions:
+  
+  Test:
+    type: object
+    properties:
+      message:
+        type: string
+        
+  LoginInput:
+    type: object
+    properties:
+      userName:
+        type: string
+      password:
+        type: string
+    
+  Token:
+    type: object
+    properties:
+      jwt:
+        type: string
+
+  TokenOK:
+    type: object
+    properties:
+      message:
+        type: string
+        
+  # Errors
+  ErrorModel:
+    type: object
+    required:
+      - message
+      - code
+    properties:
+      message:
+        type: string
