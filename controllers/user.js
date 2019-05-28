@@ -12,7 +12,7 @@ const { createToken } = require("./auth");
 // });
 
 const connectionString =
-	"postgresql://postgres@192.168.99.101:5432/test_sebasp";
+	"postgresql://postgres@192.168.99.101:5432/users-db";
 
 const pool = new Pool({
 	connectionString: connectionString
