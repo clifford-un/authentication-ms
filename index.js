@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const config = require("./config")
 const router = require("./routes/api");
 const {client} = require("./redisConnect");
+const { getAllUsers } = require("./controllers/user");
 
 const port = config.PORT;
 const app = express();
@@ -17,6 +18,7 @@ app.use(
 
 app.listen(port, function() {
 	console.log(`Hey, listen in ${port}`);
+	getAllUsers();
 });
 
 // initialize routes

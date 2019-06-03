@@ -17,6 +17,7 @@ const { isAuth } = require("../middlewares/auth");
 // });
 
 router.get("/", function(req, res, next) {
+	console.log("Hola mundo (auth-ms)");
 	res.status(200).send({ message: "Hola mundo (auth-ms)" });
 });
 
