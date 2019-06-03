@@ -11,7 +11,8 @@ services:
       # - users-db
     environment:
       - REDIS_URL=redis://auth-db
-      # - DATABASE_URL= postgres://postgres@postgres/postgres
+      - DATABASE_URL=postgresql://postgres@192.168.99.101:5432/users-db # Rancher-node1
+      # - DATABASE_URL=postgresql://postgres@35.192.112.209/users-db # G-Cloud
 
   redis-db:
     image: redis:5-alpine
