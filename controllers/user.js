@@ -1,5 +1,6 @@
 const { Pool } = require("pg");
 const { createToken } = require("./auth");
+const config = require("../config")
 
 // pools will use environment variables
 // for connection information
@@ -11,8 +12,7 @@ const { createToken } = require("./auth");
 // 	port: 5432
 // });
 
-const connectionString =
-	"postgresql://postgres@192.168.99.101:5432/users-db";
+const connectionString = config.CONNECT_PSQL;
 
 const pool = new Pool({
 	connectionString: connectionString
@@ -61,7 +61,7 @@ function login(req, res, next) {
 	let password = req.body.password;
 	let query = {
 		text: `SELECT * FROM users
-		WHERE user_id = $1 AND password = $2`,
+		WHERE user_name = $1 AND password = $2`,
 		values: [userName, password]
 	};
 	pool.query(query, (err, resp) => {

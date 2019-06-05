@@ -29,6 +29,9 @@ function isAuth(req, res, next) {
 	const token = req.headers.authorization.split(" ")[1];
 	let { userName } = req.params;
 	client.get(userName, function(err, result) {
+		if (!result) {
+			return res.status(401).send({ message: "No existe el usuario en Redis" });
+		}
 		if (result && token == result) {
 			// console.log("TRUE");
 			var value = result;
