@@ -1,6 +1,7 @@
 const { Pool } = require("pg");
 const { createToken } = require("./auth");
-const config = require("../config")
+const { deleteToken } = require("./token");
+const config = require("../config");
 
 // pools will use environment variables
 // for connection information
@@ -72,7 +73,7 @@ function login(req, res, next) {
 			if (user !== undefined) {
 				let token = createToken(userName);
 				console.log("Token creado");
-				res.status(201).send({ jwt: token });
+				res.status(201).send({ jwt: token, user_id: user["id"], user_name: user["user_name"] });
 			} else {
 				res.status(401).send({ message: "userName y password incorrectos" });
 			}
@@ -81,7 +82,14 @@ function login(req, res, next) {
 	});
 }
 
+function removeToken(req, res, next) {
+	let userName = req.body.userName;
+	deleteToken(userName);
+	res.status(201).send({ message: "token borrado de redis" });
+}
+
 module.exports = {
 	getAllUsers,
-	login
+	login,
+	removeToken
 };
