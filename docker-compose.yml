@@ -6,15 +6,14 @@ services:
     ports:
       - 6000:3200
     depends_on:
-      - redis-db
+      - auth-db
       - user-db
     environment:
       - REDIS_URL=auth-db:6379
       - USER_DB_URL=user-db:5432
 
-  redis-db:
+  auth-db:
     image: redis:5-alpine
-    container_name: auth-db
     ports:
       - 6001:6379
   
