@@ -1,36 +1,26 @@
-version: "2.1"
+version: '3'
 services:
-  app-ms:
-    container_name: auth-ms
+  auth-ms:
     build: ./
     restart: on-failure
     ports:
-      - 3200:3200
+      - 6000:3200
     depends_on:
       - redis-db
-      # - users-db
+      - user-db
     environment:
-      - REDIS_URL=redis://auth-db
-      - DATABASE_URL=postgresql://postgres@192.168.99.101:5432/users-db # Rancher-node1
-      # - DATABASE_URL=postgresql://postgres@35.192.112.209/users-db # G-Cloud
+      - REDIS_URL=auth-db:6379
+      - USER_DB_URL=user-db:5432
 
   redis-db:
     image: redis:5-alpine
     container_name: auth-db
     ports:
-      - 6379:6379
-
-  # users-db:
-  #   image: postgres:11-alpine
-  #   container_name: users-db
-  #   volumes:
-  #     # - ./tmp/db:/var/lib/postgresql/data
-  #     - ./pgdata:/var/lib/postgresql/data
-  #   ports:
-  #     - 5432:5432
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #     - POSTGRES_DB=postgres
-  #   # user: root
-  #   # command: pg_ctl -D /var/lib/postgresql/data -l logfile start
+      - 6001:6379
+  
+  user-db:
+    image: postgres
+    volumes:
+      - /user-ms/db
+    ports:
+      - '5001:5432'
