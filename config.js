@@ -1,6 +1,6 @@
 module.exports = {
     PORT: process.env.PORT || 3200,
-    CONNECT_PSQL: process.env.DATABASE_URL || "postgresql://postgres@localhost:5432/users-db",
+    CONNECT_PSQL: `postgresql://postgres@${process.env.USER_DB_URL}/users-db`,
     SECRET_TOKEN: "miclavedetokens",
     // To make the JWT more efficient we need 3 things:
     Issuer: "Clifford-UN", // Issuer (Software organization who issues the token)
