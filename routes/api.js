@@ -27,6 +27,8 @@ router.get("/login/:userName", isAuth, function(req, res, next) {
 	console.log("EXAMPLE");
 });
 
+router.post("/removeToken", user.removeToken);
+
 // error handling middleware
 router.use(function(err, req, res, next) {
 	res.status(422).send({ error: err.message });
