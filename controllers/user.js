@@ -1,6 +1,7 @@
 const { Pool } = require("pg");
 const { createToken } = require("./auth");
 const { deleteToken } = require("./token");
+const ldap = require("./ldap");
 const config = require("../config");
 
 // pools will use environment variables
@@ -65,6 +66,11 @@ function login(req, res, next) {
 		WHERE user_name = $1 AND password = $2`,
 		values: [userName, password]
 	};
+	
+	let LDAP = ldap(userName, password);
+	console.log("La verificacion fue:" + LDAP);
+	//res.status(201).send({});
+
 	pool.query(query, (err, resp) => {
 		if (err) {
 			console.log(err);
