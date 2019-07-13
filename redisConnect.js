@@ -21,4 +21,21 @@ client.on("end", function(err) {
 	console.log("Redis client closed");
 });
 
-module.exports = {client};
+const ldap = require("ldapjs");
+const clientLDAP = ldap.createClient({
+	url: "ldap://" + process.env.LDAP_URL
+});
+
+const dn = "cn=admin,dc=kwii,dc=unal,dc=edu,dc=co";
+clientLDAP.bind(dn, "admin", function(err, result) {
+	if (err) {
+		console.log("LDAP Client bind error: " + err);
+	} else {
+		console.log("LDAP client connected");
+	}
+});
+
+module.exports = {
+	client,
+	clientLDAP
+};

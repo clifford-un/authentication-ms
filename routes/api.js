@@ -35,6 +35,7 @@ router.use(function(err, req, res, next) {
 });
 
 router.use(function(req, res, next) {
+	console.log("404. Sorry cant find that!");
 	res.status(404).send("404. Sorry cant find that!");
 });
 

@@ -1,8 +1,9 @@
 const { Pool } = require("pg");
 const { createToken } = require("./auth");
 const { deleteToken } = require("./token");
-const ldap = require("./ldap");
+const { clientLDAP } = require("../redisConnect");
 const config = require("../config");
+const org = "ou=kwii,dc=kwii,dc=unal,dc=edu,dc=co";
 
 // pools will use environment variables
 // for connection information
@@ -66,10 +67,31 @@ function login(req, res, next) {
 		WHERE user_name = $1 AND password = $2`,
 		values: [userName, password]
 	};
-	
-	let LDAP = ldap(userName, password);
-	console.log("La verificacion fue:" + LDAP);
-	//res.status(201).send({});
+
+	let search_options = {
+		scope: "sub",
+		filter: "&(cn=" + userName + ")"
+	};
+
+	clientLDAP.search(org, search_options, async function(err, res) {
+		console.log("LDAP Search res:");
+		console.log(res);
+		if (err) {
+			console.log("LDAP search error: " + err);
+		} else {
+			await res.on("searchEntry", function(entry) {
+				console.log("entry: " + JSON.stringify(entry.object));
+				let result = password == entry.object.userPassword;
+				if (result) {
+					console.log("El usuario esta en el LDAP");
+				}
+				return;
+			});
+			res.on("end", function(result) {
+				console.log("search status: " + result.status);
+			});
+		}
+	});
 
 	pool.query(query, (err, resp) => {
 		if (err) {
@@ -79,7 +101,13 @@ function login(req, res, next) {
 			if (user !== undefined) {
 				let token = createToken(userName);
 				console.log("Token creado");
-				res.status(201).send({ jwt: token, user_id: user["id"], user_name: user["user_name"] });
+				res
+					.status(201)
+					.send({
+						jwt: token,
+						user_id: user["id"],
+						user_name: user["user_name"]
+					});
 			} else {
 				res.status(401).send({ message: "userName y password incorrectos" });
 			}
