@@ -73,46 +73,56 @@ function login(req, res, next) {
 		filter: "&(cn=" + userName + ")"
 	};
 
-	clientLDAP.search(org, search_options, async function(err, res) {
+	clientLDAP.search(org, search_options, async function(err, response) {
 		console.log("LDAP Search res:");
-		console.log(res);
+		console.log(response);
 		if (err) {
 			console.log("LDAP search error: " + err);
 		} else {
-			await res.on("searchEntry", function(entry) {
+			ldap_name = undefined;
+			ldap_pswd = undefined;
+
+			await response.on("searchEntry", function(entry) {
+				ldap_name = entry.object.cn;
+				ldap_pswd = entry.object.userPassword;
+
 				console.log("entry: " + JSON.stringify(entry.object));
-				let result = password == entry.object.userPassword;
-				if (result) {
-					console.log("El usuario esta en el LDAP");
-				}
+				
 				return;
 			});
-			res.on("end", function(result) {
+			response.on("end", function(result) {
+				if(ldap_name == undefined || ldap_pswd == undefined){
+					res.status(401).send({ message: "Usuario no encontrado en el directorio LDAP" });
+				}else{
+					if(password == ldap_pswd){
+						pool.query(query, (err, resp) => {
+							if (err) {
+								console.log(err);
+							} else {
+								var user = resp.rows[0];
+								if (user !== undefined) {
+									let token = createToken(userName);
+									console.log("Token creado");
+									res
+										.status(201)
+										.send({
+											jwt: token,
+											user_id: user["id"],
+											user_name: user["user_name"]
+										});
+								} else {
+									res.status(401).send({ message: "userName y password incorrectos" });
+								}
+							}
+							// pool.end();
+						});
+					}else{
+						res.status(401).send({ message: "userName y password incorrectos" });
+					}
+				}
 				console.log("search status: " + result.status);
 			});
 		}
-	});
-
-	pool.query(query, (err, resp) => {
-		if (err) {
-			console.log(err);
-		} else {
-			var user = resp.rows[0];
-			if (user !== undefined) {
-				let token = createToken(userName);
-				console.log("Token creado");
-				res
-					.status(201)
-					.send({
-						jwt: token,
-						user_id: user["id"],
-						user_name: user["user_name"]
-					});
-			} else {
-				res.status(401).send({ message: "userName y password incorrectos" });
-			}
-		}
-		// pool.end();
 	});
 }
 
